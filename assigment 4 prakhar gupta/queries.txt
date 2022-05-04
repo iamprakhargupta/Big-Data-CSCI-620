@@ -1,0 +1,137 @@
+use("IMDB")
+db.createCollection("member")
+db.createCollection("all_char")
+# Query1
+use("IMDB")
+db.movies.aggregate([{$match : {"startyear" : {"$ne": 2014}}},
+                     {$lookup : {
+                        from : "members",
+                        localField : "actors.actor",
+                        foreignField : "_id",
+                        as : "q1"
+                     }},
+                     {$unwind : "$q1"},
+                     {$match : {"q1.name" : {"$regex" : "^Phi*"}, "q1.deathYear" : {"$exists" : false}}},
+                     {$project : {"q1.name" : 1}}
+                    ], {allowDiskUse: true})
+//1 m 35 s 295 ms
+
+//Query 2
+use("IMDB")
+db.movies.aggregate([{$match : {genres: {$eq: 'Talk-Show'},startYear: 2017}},
+                       {$unwind:"$producers"},
+                     {$lookup : {
+                        from : "members",
+                        localField : "producers",
+                        foreignField : "_id",
+                        as : "q2"}},
+                     {$unwind : "$q2"},
+                       {$match : {"q2.name" : {"$regex" : "\w*Gill\w*"}}},
+                     {$group : {_id : "$q2.name", count: {$sum : 1}}},
+                     {$match : {"count" : {"$gte" : 50}}}
+
+                     ], {allowDiskUse : true})
+// 6 m 58 s 769 ms
+
+
+//Query3
+use("IMDB")
+db.movies.aggregate(
+[
+{
+$unwind:'$writers'
+},
+
+{
+    $lookup: {
+        from: 'members',
+        localField: 'writers',
+        foreignField: '_id',
+        as: 'q3'
+    }
+}, {
+    $unwind: '$q3'
+}, {
+    $match: {
+        'q3.name': {
+            $regex: 'S*BhardwajS*'
+        },
+        'q3.deathYear': {
+            $exists: false
+        }
+    }
+}, {
+    $group: {
+        _id: null,
+        fieldN: {
+            $avg: '$runtime'
+        }
+    }
+}])
+//20 m 28 s 140 ms
+
+
+//Query 4
+
+db.movies.aggregate([
+                    {$match : {"runtime" : {"$gte" : 120}, "type" :"movie"}},
+                    {$unwind : "$producers"},
+                    {$lookup : {
+                        from : "members",
+                        localField : "producers",
+                        foreignField : "_id",
+                        as : "q4"
+                    }},
+                    {$unwind : "$q4"},
+                    {$match : {"q4.deathYear" : {"$exists" : false}}},
+                   {$group : {_id : "$q4.name", numTitles : {$sum : 1}}}
+], {allowDiskUse : true})
+//2 m 28 s
+
+
+
+
+
+//Query 5
+// Sci-Fi movies directed by James Cameron and acted in by Sigourney
+  //Weaver.
+
+// Query 5
+use("IMDB")
+db.movies.aggregate([
+ {
+    $match: {
+         "genres": {"$eq":"Sci-Fi" }
+        }},
+   {
+   $unwind:"$actors"
+   }
+        ,{
+         $lookup: {
+        from: 'members',
+        localField: 'actors.actor',
+        foreignField: '_id',
+        as: 'q5_1'
+    }},
+    {$unwind : "$directors"},
+    {
+    $lookup:{
+        from: 'members',
+        localField: 'directors',
+        foreignField: '_id',
+        as: 'q5_2'
+    }},
+    {$unwind:"$q5_1"},
+    {$unwind:"$q5_2"},
+    {
+    $match: {
+    $and: [ {"q5_1.name":"Sigourney Weaver"} ,
+    {"q5_2.name":"James Cameron"}]
+
+        }
+
+    },
+    {$project : {_id : 1, title : 1, "q5_1.name" : 1, "q5_2.name" :1, "actors.roles" :1}}
+
+    ],{allowDiskUse : true})
+//1 m 48 s 847 ms

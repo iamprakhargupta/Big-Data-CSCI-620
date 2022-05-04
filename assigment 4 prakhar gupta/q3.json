@@ -1,0 +1,142 @@
+[
+  {
+    "command": {
+      "aggregate": "movies",
+      "pipeline": [
+        {
+          "$unwind": "$writers"
+        },
+        {
+          "$lookup": {
+            "from": "members",
+            "localField": "writers",
+            "foreignField": "_id",
+            "as": "q3"
+          }
+        },
+        {
+          "$unwind": "$q3"
+        },
+        {
+          "$match": {
+            "q3.name": {
+              "$regex": "S*BhardwajS*"
+            },
+            "q3.deathYear": {
+              "$exists": false
+            }
+          }
+        },
+        {
+          "$group": {
+            "_id": null,
+            "fieldN": {
+              "$avg": "$runtime"
+            }
+          }
+        }
+      ],
+      "explain": true,
+      "$db": "IMDB",
+      "lsid": {
+        "id": {"$binary": {"base64": "EERq/U0gR1uKViQZZfeKJA==", "subType": "04"}}
+      }
+    },
+    "explainVersion": "1",
+    "ok": 1,
+    "serverInfo": {
+      "host": "LAPTOP-FB979B6J",
+      "port": 27017,
+      "version": "5.0.6",
+      "gitVersion": "212a8dbb47f07427dae194a9c75baec1d81d9259"
+    },
+    "serverParameters": {
+      "internalQueryFacetBufferSizeBytes": 104857600,
+      "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+      "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+      "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+      "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+      "internalQueryProhibitBlockingMergeOnMongoS": 0,
+      "internalQueryMaxAddToSetBytes": 104857600,
+      "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+    },
+    "stages": [
+      {
+        "$cursor": {
+          "queryPlanner": {
+            "namespace": "IMDB.movies",
+            "indexFilterSet": false,
+            "parsedQuery": {
+            },
+            "queryHash": "C9CA045B",
+            "planCacheKey": "0523CE15",
+            "maxIndexedOrSolutionsReached": false,
+            "maxIndexedAndSolutionsReached": false,
+            "maxScansToExplodeReached": false,
+            "winningPlan": {
+              "stage": "PROJECTION_SIMPLE",
+              "transformBy": {
+                "runtime": 1,
+                "writers": 1,
+                "_id": 0
+              },
+              "inputStage": {
+                "stage": "COLLSCAN",
+                "direction": "forward"
+              }
+            },
+            "rejectedPlans": []
+          }
+        }
+      },
+      {
+        "$unwind": {
+          "path": "$writers"
+        }
+      },
+      {
+        "$lookup": {
+          "from": "members",
+          "as": "q3",
+          "localField": "writers",
+          "foreignField": "_id",
+          "let": {
+          },
+          "pipeline": [
+            {
+              "$match": {
+                "$and": [
+                  {
+                    "name": {
+                      "$regex": "S*BhardwajS*"
+                    }
+                  },
+                  {
+                    "deathYear": {
+                      "$not": {
+                        "$exists": true
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "unwinding": {
+            "preserveNullAndEmptyArrays": false
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": {
+            "$const": null
+          },
+          "fieldN": {
+            "$avg": "$runtime"
+          }
+        }
+      }
+    ]
+  }
+]

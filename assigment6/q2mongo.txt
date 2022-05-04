@@ -1,0 +1,46 @@
+
+//q2_part2
+use("IMDB")
+db.movies.aggregate([{
+    $lookup: {
+        from: 'extraclean',
+        localField: '_id',
+        foreignField: '_id',
+        as: 'extraclean'
+    }
+}, {
+    $unwind: {
+        path: '$extraclean',
+        preserveNullAndEmptyArrays: true
+    }
+}, {
+    $addFields: {
+        titleLabel: '$extraclean.titleLabel',
+        cost: '$extraclean.cost',
+        distributorLabel: '$extraclean.distributorLabel',
+        box_office: '$extraclean.box_office',
+        MPAA_film_ratingLabel: '$extraclean.MPAA_film_ratingLabel'
+    }
+}, {
+    $project: {
+        extraclean: 0
+    }
+},
+{ $out : "moviesnew" }
+
+], {allowDiskUse : true})
+
+//18 m 21
+
+use("IMDB")
+db.moviesnew.aggregate([
+{$match : {$or: [{"titleLabel" : {"$exists" : true}},
+{"cost" : {"$exists" : true}},
+{"distributorLabel" : {"$exists" : true}},
+{"box_office" : {"$exists" : true}},
+{"MPAA_film_ratingLabel" : {"$exists" : true}}
+]}},
+{$group : {_id : null, numofinserted : {$sum : 1}}}
+],
+{allowDiskUse : true})
+//110690

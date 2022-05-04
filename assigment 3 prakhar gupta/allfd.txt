@@ -1,0 +1,164 @@
+('movieid', 'runtime')----->movieid
+('movieid', 'startyear')----->movieid
+('movieid', 'type')----->movieid
+('movieid', 'genre')----->movieid
+('movieid', 'avgrating')----->movieid
+movieid----->movieid
+('movieid', 'genreid')----->movieid
+('movieid', 'memberid')----->movieid
+('movieid', 'character')----->movieid
+('movieid', 'birthyear')----->movieid
+('movieid', 'type')----->type
+movieid----->type
+('movieid', 'genreid')----->type
+('movieid', 'memberid')----->type
+('type', 'character')----->type
+('movieid', 'runtime')----->type
+('movieid', 'genre')----->type
+('movieid', 'avgrating')----->type
+('type', 'startyear')----->type
+type----->type
+('type', 'birthyear')----->type
+('type', 'genreid')----->type
+('movieid', 'character')----->type
+('type', 'memberid')----->type
+('movieid', 'startyear')----->type
+('type', 'avgrating')----->type
+('type', 'runtime')----->type
+('type', 'genre')----->type
+('movieid', 'birthyear')----->type
+('startyear', 'memberid')----->startyear
+('movieid', 'type')----->startyear
+movieid----->startyear
+('startyear', 'runtime')----->startyear
+('movieid', 'genreid')----->startyear
+('movieid', 'memberid')----->startyear
+('startyear', 'avgrating')----->startyear
+('startyear', 'genre')----->startyear
+('movieid', 'runtime')----->startyear
+('movieid', 'genre')----->startyear
+('movieid', 'avgrating')----->startyear
+('type', 'startyear')----->startyear
+('startyear', 'character')----->startyear
+('movieid', 'character')----->startyear
+('movieid', 'startyear')----->startyear
+startyear----->startyear
+('startyear', 'birthyear')----->startyear
+('startyear', 'genreid')----->startyear
+('movieid', 'birthyear')----->startyear
+('movieid', 'type')----->runtime
+movieid----->runtime
+('startyear', 'runtime')----->runtime
+('movieid', 'genreid')----->runtime
+('runtime', 'character')----->runtime
+('movieid', 'memberid')----->runtime
+('movieid', 'runtime')----->runtime
+('movieid', 'genre')----->runtime
+('movieid', 'avgrating')----->runtime
+('runtime', 'birthyear')----->runtime
+('runtime', 'genreid')----->runtime
+('runtime', 'memberid')----->runtime
+('movieid', 'character')----->runtime
+runtime----->runtime
+('movieid', 'startyear')----->runtime
+('runtime', 'avgrating')----->runtime
+('type', 'runtime')----->runtime
+('runtime', 'genre')----->runtime
+('movieid', 'birthyear')----->runtime
+('movieid', 'type')----->avgrating
+('avgrating', 'genre')----->avgrating
+movieid----->avgrating
+('movieid', 'genreid')----->avgrating
+('movieid', 'memberid')----->avgrating
+('startyear', 'avgrating')----->avgrating
+avgrating----->avgrating
+('movieid', 'runtime')----->avgrating
+('movieid', 'genre')----->avgrating
+('movieid', 'avgrating')----->avgrating
+('avgrating', 'character')----->avgrating
+('movieid', 'character')----->avgrating
+('movieid', 'startyear')----->avgrating
+('type', 'avgrating')----->avgrating
+('runtime', 'avgrating')----->avgrating
+('avgrating', 'birthyear')----->avgrating
+('avgrating', 'genreid')----->avgrating
+('avgrating', 'memberid')----->avgrating
+('movieid', 'birthyear')----->avgrating
+('genre', 'birthyear')----->genreid
+('avgrating', 'genre')----->genreid
+('movieid', 'genreid')----->genreid
+genreid----->genreid
+('startyear', 'genre')----->genreid
+('genre', 'memberid')----->genreid
+('movieid', 'genre')----->genreid
+genre----->genreid
+('genreid', 'birthyear')----->genreid
+('genreid', 'memberid')----->genreid
+('runtime', 'genreid')----->genreid
+('type', 'genreid')----->genreid
+('genreid', 'genre')----->genreid
+('genre', 'character')----->genreid
+('runtime', 'genre')----->genreid
+('type', 'genre')----->genreid
+('avgrating', 'genreid')----->genreid
+('startyear', 'genreid')----->genreid
+('genreid', 'character')----->genreid
+('genre', 'birthyear')----->genre
+('avgrating', 'genre')----->genre
+('movieid', 'genreid')----->genre
+genreid----->genre
+('startyear', 'genre')----->genre
+('genre', 'memberid')----->genre
+('movieid', 'genre')----->genre
+genre----->genre
+('genreid', 'birthyear')----->genre
+('genreid', 'memberid')----->genre
+('runtime', 'genreid')----->genre
+('type', 'genreid')----->genre
+('genreid', 'genre')----->genre
+('genre', 'character')----->genre
+('runtime', 'genre')----->genre
+('type', 'genre')----->genre
+('avgrating', 'genreid')----->genre
+('startyear', 'genreid')----->genre
+('genreid', 'character')----->genre
+('startyear', 'memberid')----->memberid
+('memberid', 'birthyear')----->memberid
+('runtime', 'memberid')----->memberid
+('movieid', 'memberid')----->memberid
+('memberid', 'character')----->memberid
+('type', 'memberid')----->memberid
+('genre', 'memberid')----->memberid
+memberid----->memberid
+('avgrating', 'memberid')----->memberid
+('genreid', 'memberid')----->memberid
+('startyear', 'memberid')----->birthyear
+('genre', 'birthyear')----->birthyear
+('birthyear', 'character')----->birthyear
+('movieid', 'memberid')----->birthyear
+('genre', 'memberid')----->birthyear
+('genreid', 'birthyear')----->birthyear
+('memberid', 'character')----->birthyear
+('genreid', 'memberid')----->birthyear
+('type', 'birthyear')----->birthyear
+('runtime', 'birthyear')----->birthyear
+('runtime', 'memberid')----->birthyear
+('type', 'memberid')----->birthyear
+memberid----->birthyear
+('memberid', 'birthyear')----->birthyear
+('avgrating', 'birthyear')----->birthyear
+birthyear----->birthyear
+('startyear', 'birthyear')----->birthyear
+('avgrating', 'memberid')----->birthyear
+('movieid', 'birthyear')----->birthyear
+character----->character
+('birthyear', 'character')----->character
+('runtime', 'character')----->character
+('memberid', 'character')----->character
+('movieid', 'memberid')----->character
+('movieid', 'character')----->character
+('avgrating', 'character')----->character
+('type', 'character')----->character
+('genre', 'character')----->character
+('startyear', 'character')----->character
+('genreid', 'character')----->character

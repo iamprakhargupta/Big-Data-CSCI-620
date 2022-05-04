@@ -1,0 +1,165 @@
+[
+  {
+    "command": {
+      "aggregate": "movies",
+      "pipeline": [
+        {
+          "$match": {
+            "runtime": {
+              "$gte": 120
+            },
+            "type": "movie"
+          }
+        },
+        {
+          "$unwind": "$producers"
+        },
+        {
+          "$lookup": {
+            "from": "members",
+            "localField": "producers",
+            "foreignField": "_id",
+            "as": "q4"
+          }
+        },
+        {
+          "$unwind": "$q4"
+        },
+        {
+          "$match": {
+            "q4.deathYear": {
+              "$exists": false
+            }
+          }
+        },
+        {
+          "$group": {
+            "_id": "$q4.name",
+            "numTitles": {
+              "$sum": 1
+            }
+          }
+        }
+      ],
+      "explain": true,
+      "allowDiskUse": true,
+      "$db": "IMDB",
+      "lsid": {
+        "id": {"$binary": {"base64": "EERq/U0gR1uKViQZZfeKJA==", "subType": "04"}}
+      }
+    },
+    "explainVersion": "1",
+    "ok": 1,
+    "serverInfo": {
+      "host": "LAPTOP-FB979B6J",
+      "port": 27017,
+      "version": "5.0.6",
+      "gitVersion": "212a8dbb47f07427dae194a9c75baec1d81d9259"
+    },
+    "serverParameters": {
+      "internalQueryFacetBufferSizeBytes": 104857600,
+      "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+      "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+      "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+      "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+      "internalQueryProhibitBlockingMergeOnMongoS": 0,
+      "internalQueryMaxAddToSetBytes": 104857600,
+      "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+    },
+    "stages": [
+      {
+        "$cursor": {
+          "queryPlanner": {
+            "namespace": "IMDB.movies",
+            "indexFilterSet": false,
+            "parsedQuery": {
+              "$and": [
+                {
+                  "type": {
+                    "$eq": "movie"
+                  }
+                },
+                {
+                  "runtime": {
+                    "$gte": 120
+                  }
+                }
+              ]
+            },
+            "queryHash": "F8C620D6",
+            "planCacheKey": "47AD8891",
+            "maxIndexedOrSolutionsReached": false,
+            "maxIndexedAndSolutionsReached": false,
+            "maxScansToExplodeReached": false,
+            "winningPlan": {
+              "stage": "PROJECTION_DEFAULT",
+              "transformBy": {
+                "producers": 1,
+                "q4.name": 1,
+                "_id": 0
+              },
+              "inputStage": {
+                "stage": "COLLSCAN",
+                "filter": {
+                  "$and": [
+                    {
+                      "type": {
+                        "$eq": "movie"
+                      }
+                    },
+                    {
+                      "runtime": {
+                        "$gte": 120
+                      }
+                    }
+                  ]
+                },
+                "direction": "forward"
+              }
+            },
+            "rejectedPlans": []
+          }
+        }
+      },
+      {
+        "$unwind": {
+          "path": "$producers"
+        }
+      },
+      {
+        "$lookup": {
+          "from": "members",
+          "as": "q4",
+          "localField": "producers",
+          "foreignField": "_id",
+          "let": {
+          },
+          "pipeline": [
+            {
+              "$match": {
+                "deathYear": {
+                  "$not": {
+                    "$exists": true
+                  }
+                }
+              }
+            }
+          ],
+          "unwinding": {
+            "preserveNullAndEmptyArrays": false
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "$q4.name",
+          "numTitles": {
+            "$sum": {
+              "$const": 1
+            }
+          }
+        }
+      }
+    ]
+  }
+]

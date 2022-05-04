@@ -1,0 +1,149 @@
+[
+  {
+    "command": {
+      "aggregate": "movies",
+      "pipeline": [
+        {
+          "$match": {
+            "startyear": {
+              "$ne": 2014
+            }
+          }
+        },
+        {
+          "$lookup": {
+            "from": "members",
+            "localField": "actors.actor",
+            "foreignField": "_id",
+            "as": "q1"
+          }
+        },
+        {
+          "$unwind": "$q1"
+        },
+        {
+          "$match": {
+            "q1.name": {
+              "$regex": "^Phi*"
+            },
+            "q1.deathYear": {
+              "$exists": false
+            }
+          }
+        },
+        {
+          "$project": {
+            "q1.name": 1
+          }
+        }
+      ],
+      "explain": true,
+      "allowDiskUse": true,
+      "$db": "IMDB",
+      "lsid": {
+        "id": {"$binary": {"base64": "EERq/U0gR1uKViQZZfeKJA==", "subType": "04"}}
+      }
+    },
+    "explainVersion": "1",
+    "ok": 1,
+    "serverInfo": {
+      "host": "LAPTOP-FB979B6J",
+      "port": 27017,
+      "version": "5.0.6",
+      "gitVersion": "212a8dbb47f07427dae194a9c75baec1d81d9259"
+    },
+    "serverParameters": {
+      "internalQueryFacetBufferSizeBytes": 104857600,
+      "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+      "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+      "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+      "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+      "internalQueryProhibitBlockingMergeOnMongoS": 0,
+      "internalQueryMaxAddToSetBytes": 104857600,
+      "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+    },
+    "stages": [
+      {
+        "$cursor": {
+          "queryPlanner": {
+            "namespace": "IMDB.movies",
+            "indexFilterSet": false,
+            "parsedQuery": {
+              "startyear": {
+                "$not": {
+                  "$eq": 2014
+                }
+              }
+            },
+            "queryHash": "AFC7DA31",
+            "planCacheKey": "2A1618D0",
+            "maxIndexedOrSolutionsReached": false,
+            "maxIndexedAndSolutionsReached": false,
+            "maxScansToExplodeReached": false,
+            "winningPlan": {
+              "stage": "PROJECTION_DEFAULT",
+              "transformBy": {
+                "_id": 1,
+                "actors.actor": 1,
+                "q1.name": 1
+              },
+              "inputStage": {
+                "stage": "COLLSCAN",
+                "filter": {
+                  "startyear": {
+                    "$not": {
+                      "$eq": 2014
+                    }
+                  }
+                },
+                "direction": "forward"
+              }
+            },
+            "rejectedPlans": []
+          }
+        }
+      },
+      {
+        "$lookup": {
+          "from": "members",
+          "as": "q1",
+          "localField": "actors.actor",
+          "foreignField": "_id",
+          "let": {
+          },
+          "pipeline": [
+            {
+              "$match": {
+                "$and": [
+                  {
+                    "name": {
+                      "$regex": "^Phi*"
+                    }
+                  },
+                  {
+                    "deathYear": {
+                      "$not": {
+                        "$exists": true
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "unwinding": {
+            "preserveNullAndEmptyArrays": false
+          }
+        }
+      },
+      {
+        "$project": {
+          "_id": true,
+          "q1": {
+            "name": true
+          }
+        }
+      }
+    ]
+  }
+]

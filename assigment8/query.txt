@@ -1,0 +1,11 @@
+use("IMDB")
+db.movies.aggregate([
+{
+$match:{type:"movie","numvotes":{$gt:10000}}
+},
+{
+$match:{avgrating : {"$exists" : true},startYear : {"$exists" : true}}
+},
+{ $out : "movieskmeans" }
+
+], {allowDiskUse : true})

@@ -1,0 +1,102 @@
+
+//q3
+
+db.movies.createIndex(
+  { originaltitle: 1 ,title:1   } )
+
+db.extraclean.createIndex({titleLabel:1})
+//Approach 1
+//Matching on originaltitle and title label
+use("IMDB")
+db.movies.aggregate([{
+    $lookup: {
+        from: 'extraclean',
+        localField: 'originaltitle',
+        foreignField: 'titleLabel',
+        as: 'extraclean'
+    }
+}, {
+    $unwind: {
+        path: '$extraclean'
+
+    }
+}, {
+    $addFields: {
+
+        cost: '$extraclean.cost',
+        distributorLabel: '$extraclean.distributorLabel',
+        box_office: '$extraclean.box_office',
+        MPAA_film_ratingLabel: '$extraclean.MPAA_film_ratingLabel'
+    }
+}, {
+    $project: {
+
+        extraclean: 0,
+        _id:0
+
+    }
+},
+
+{ $out : "moviesname" }
+
+], {allowDiskUse : true})
+
+
+
+//duplicates finding
+
+db.moviesname.aggregate([
+{$group : {_id : "$originaltitle", count : {$sum : 1}}},
+{$match : {"count" : {"$gte" : 2}}}
+], {allowDiskUse : true})
+
+//Unique count
+db.moviesname.aggregate([
+{$group : {_id : "$originaltitle"}},
+{$group : {_id : null,totalunique:{$sum:1}}}
+], {allowDiskUse : true})
+////76047 total matches
+
+
+
+//Approach 2
+//Matching on title and title label
+use("IMDB")
+db.movies.aggregate([{
+    $lookup: {
+        from: 'extraclean',
+        localField: 'title',
+        foreignField: 'titleLabel',
+        as: 'extraclean'
+    }
+}, {
+    $unwind: {
+        path: '$extraclean'
+
+    }
+}, {
+    $addFields: {
+
+        cost: '$extraclean.cost',
+        distributorLabel: '$extraclean.distributorLabel',
+        box_office: '$extraclean.box_office',
+        MPAA_film_ratingLabel: '$extraclean.MPAA_film_ratingLabel'
+    }
+}, {
+    $project: {
+
+        extraclean: 0,
+        _id:0
+
+    }
+},
+
+{ $out : "moviesnametitle" }
+
+], {allowDiskUse : true})
+
+
+db.moviesnametitle.aggregate([
+{$group : {_id : "$title"}},
+{$group : {_id : null,totalunique:{$sum:1}}}
+], {allowDiskUse : true})

@@ -1,0 +1,8 @@
+movieid----->type
+movieid----->startyear
+movieid----->runtime
+movieid----->avgrating
+genre----->genreid
+genreid----->genre
+memberid----->birthyear
+('movieid', 'memberid')----->character

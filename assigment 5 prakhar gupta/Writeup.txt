@@ -1,0 +1,37 @@
+Q1 - refer to q1.sql
+
+Q2 - refer to q2.sql
+
+Q3- refer to q3.sql(timings also under each queries in comment)
+Timings-
+Query 1- 8secs
+Query - 6 secs
+
+Q4- refer to q4.sql(timings also under each queries in comment)
+Timings-
+--Query 1
+Non materialized view- 1min 4 secs
+
+--Query 1
+materialized view-10 secs
+
+--Query 2
+Non materialized view- 1min 9sec
+
+--Query 2
+materialized view-3 secs
+
+
+Q5- refer to q5.sql(timings also under each queries in comment)
+Timings-
+--Query 1
+Non materialized view- 1min 6 secs
+
+--Query 1
+materialized view-10 secs
+
+--Query 2
+Non materialized view- 1sec 935 ms
+
+--Query 2
+materialized view-97 ms

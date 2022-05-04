@@ -1,0 +1,195 @@
+[
+  {
+    "command": {
+      "aggregate": "movies",
+      "pipeline": [
+        {
+          "$match": {
+            "genres": {
+              "$eq": "Sci-Fi"
+            }
+          }
+        },
+        {
+          "$unwind": "$actors"
+        },
+        {
+          "$lookup": {
+            "from": "members",
+            "localField": "actors.actor",
+            "foreignField": "_id",
+            "as": "q5_1"
+          }
+        },
+        {
+          "$unwind": "$directors"
+        },
+        {
+          "$lookup": {
+            "from": "members",
+            "localField": "directors",
+            "foreignField": "_id",
+            "as": "q5_2"
+          }
+        },
+        {
+          "$unwind": "$q5_1"
+        },
+        {
+          "$unwind": "$q5_2"
+        },
+        {
+          "$match": {
+            "$and": [
+              {
+                "q5_1.name": "Sigourney Weaver"
+              },
+              {
+                "q5_2.name": "James Cameron"
+              }
+            ]
+          }
+        },
+        {
+          "$project": {
+            "_id": 1,
+            "title": 1,
+            "q5_1.name": 1,
+            "q5_2.name": 1,
+            "actors.roles": 1
+          }
+        }
+      ],
+      "explain": true,
+      "allowDiskUse": true,
+      "$db": "IMDB",
+      "lsid": {
+        "id": {"$binary": {"base64": "EERq/U0gR1uKViQZZfeKJA==", "subType": "04"}}
+      }
+    },
+    "explainVersion": "1",
+    "ok": 1,
+    "serverInfo": {
+      "host": "LAPTOP-FB979B6J",
+      "port": 27017,
+      "version": "5.0.6",
+      "gitVersion": "212a8dbb47f07427dae194a9c75baec1d81d9259"
+    },
+    "serverParameters": {
+      "internalQueryFacetBufferSizeBytes": 104857600,
+      "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+      "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+      "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+      "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+      "internalQueryProhibitBlockingMergeOnMongoS": 0,
+      "internalQueryMaxAddToSetBytes": 104857600,
+      "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+    },
+    "stages": [
+      {
+        "$cursor": {
+          "queryPlanner": {
+            "namespace": "IMDB.movies",
+            "indexFilterSet": false,
+            "parsedQuery": {
+              "genres": {
+                "$eq": "Sci-Fi"
+              }
+            },
+            "queryHash": "D40EEC11",
+            "planCacheKey": "6FF15CDB",
+            "maxIndexedOrSolutionsReached": false,
+            "maxIndexedAndSolutionsReached": false,
+            "maxScansToExplodeReached": false,
+            "winningPlan": {
+              "stage": "PROJECTION_SIMPLE",
+              "transformBy": {
+                "_id": 1,
+                "actors": 1,
+                "directors": 1,
+                "q5_1": 1,
+                "q5_2": 1,
+                "title": 1
+              },
+              "inputStage": {
+                "stage": "COLLSCAN",
+                "filter": {
+                  "genres": {
+                    "$eq": "Sci-Fi"
+                  }
+                },
+                "direction": "forward"
+              }
+            },
+            "rejectedPlans": []
+          }
+        }
+      },
+      {
+        "$unwind": {
+          "path": "$actors"
+        }
+      },
+      {
+        "$lookup": {
+          "from": "members",
+          "as": "q5_1",
+          "localField": "actors.actor",
+          "foreignField": "_id"
+        }
+      },
+      {
+        "$unwind": {
+          "path": "$directors"
+        }
+      },
+      {
+        "$lookup": {
+          "from": "members",
+          "as": "q5_2",
+          "localField": "directors",
+          "foreignField": "_id"
+        }
+      },
+      {
+        "$unwind": {
+          "path": "$q5_1"
+        }
+      },
+      {
+        "$match": {
+          "q5_1.name": {
+            "$eq": "Sigourney Weaver"
+          }
+        }
+      },
+      {
+        "$unwind": {
+          "path": "$q5_2"
+        }
+      },
+      {
+        "$match": {
+          "q5_2.name": {
+            "$eq": "James Cameron"
+          }
+        }
+      },
+      {
+        "$project": {
+          "_id": true,
+          "title": true,
+          "q5_1": {
+            "name": true
+          },
+          "q5_2": {
+            "name": true
+          },
+          "actors": {
+            "roles": true
+          }
+        }
+      }
+    ]
+  }
+]
